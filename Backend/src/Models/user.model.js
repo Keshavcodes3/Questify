@@ -11,21 +11,49 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
+  avatar: {
+    type: String,
+    default: ''
+  },
   password: {
     type: String,
-    required: true
+    required: true,
+    select: false
   },
   level: {
     type: Number,
     default: 1
   },
+  challenges: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Challenge'
+  }],
+  badges: {
+    type: String,
+    default: "",
+    select: false
+
+  },
+  streak:{
+    type:String,
+    default:"0",
+    select:false
+  },
   xp: {
     type: Number,
-    default: 0
+    default: 0,
+    select: false
+
+  },
+  lastActiveDay:{
+    type:Date,
+    default:Date.now
   },
   coins: {
     type: Number,
-    default: 0
+    default: 0,
+    select: false
+
   },
 }, { timestamps: true });
 

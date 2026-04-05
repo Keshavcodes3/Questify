@@ -6,8 +6,11 @@ const taskSchema = new mongoose.Schema({
     description: { type: String },
     dueDate: { type: Date },
     completed: { type: Boolean, default: false },
-    xpReward: { type: Number, default: 10 },
-    coinReward: { type: Number, default: 5 },
+    xpReward: { type: Number, default: 10,select:false },
+    status: { type: String, enum: ['pending', 'completed'], default: 'pending' },
+    coinReward: { type: Number, default: 5,select:false },
 }, { timestamps: true });
 
-module.exports = mongoose.model('Task', taskSchema);
+const taskModel= mongoose.model('Task', taskSchema);
+
+export default taskModel

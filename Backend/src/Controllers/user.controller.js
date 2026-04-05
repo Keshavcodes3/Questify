@@ -134,17 +134,83 @@ export const getMe = async (req, res) => {
                 message: "User not found"
             });
         }
-        const allHabits = await habitModel.find({ user: userId })
         return res.status(200).json({
             success: true,
             user: user,
-            habits: allHabits
         });
     } catch (error) {
         return res.status(500).json({
             success: false,
-            error:error.message,
+            error: error.message,
             message: "Failed to fetch user"
         });
     }
 };
+
+
+
+export const updateProfileController = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { name, email } = req.body
+        if (!name && !email) {
+            return res.status(400).json({
+                message: "Name or email must have a value to update",
+                error: "must provide a value to update",
+                success: false
+            })
+        }
+        const user = await userModel.findById(userId)
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        if (name) user.name = name;
+        if (email) user.email = email
+        await user.save()
+        return res.status(200).json({
+            message: "Profile updated successfully",
+            error: null,
+            user: user,
+            success: false
+        })
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            message: "Failed to fetch user"
+        });
+    }
+}
+
+
+
+export const getUserStats = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const user = await userModel.findById(userId).select("+xp +badges +coins +level ")
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: "User not found"
+            });
+        }
+        return res.status(200).json({
+            message: "User Status fetched successfully",
+            userStats: user,
+            error: null,
+            success: true
+        })
+
+    } catch (error) {
+        return res.status(500).json({
+            success: false,
+            error: error.message,
+            message: "Failed to fetch user"
+        });
+    }
+}
+
+
