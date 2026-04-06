@@ -49,7 +49,7 @@ export const completeOrIncompleteTask = async (req, res) => {
             });
         }
         const taskId = req.params.id;
-        const Task = await taskModel.findById(taskId)
+        const Task = await taskModel.findById(taskId).select('+xpReward +coinReward +status' )
         if (!Task) {
             return res.status(404).json({
                 message: "Task not defined ",
@@ -68,11 +68,11 @@ export const completeOrIncompleteTask = async (req, res) => {
             Task.status = "completed"
             user.xp += Task.xpReward
             user.coins += Task.coinReward
-            const today=new Date().toDateString().split(" ").join("-")[0]
+            const today=new Date().toDateString()
             if(today-user.lastActiveDay===1){
                 user.streak++;
             }
-            else if(today - user.lastActiveDate > 1){
+            else if(today - user.lastActiveDay > 1){
                 user.streak=1
             }
             user.lastActiveDay=today

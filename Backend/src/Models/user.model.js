@@ -47,7 +47,7 @@ const userSchema = new mongoose.Schema({
   },
   lastActiveDay:{
     type:Date,
-    default:Date.now
+    default:Date.now().toString()
   },
   coins: {
     type: Number,
