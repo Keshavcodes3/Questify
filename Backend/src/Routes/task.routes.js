@@ -1,6 +1,6 @@
 import { authUser } from "../Middlewares/user.middleware";
 import taskModel from "../Models/task.model";
-import { completeOrIncompleteTask, createTask, deleteTask, updateTask } from "../Controllers/tasks.controller";
+import { completeOrIncompleteTask, createTask, deleteTask, GetTaskStats, getWeeklyStats, updateTask } from "../Controllers/tasks.controller";
 
 import express from 'express'
 
@@ -15,5 +15,9 @@ taskRoutes.patch('/:id',authUser,updateTask)
 
 taskRoutes.delete('/:id',authUser,deleteTask)
 
+taskRoutes.get('/stats',authUser,GetTaskStats)
+
+
+taskRoutes.get('/weeklyStats',authUser,getWeeklyStats)
 export default taskRoutes
 

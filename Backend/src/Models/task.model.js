@@ -5,6 +5,19 @@ const taskSchema = new mongoose.Schema({
     title: { type: String, required: true },
     description: { type: String },
     dueDate: { type: Date },
+    currentDate:{
+        type:Date,
+        default:new Date().toString()
+    },
+    priority:{
+        type:String,
+        enum:['low','medium','high',],
+        default:'low'
+    },
+    dueDate:{
+        type:Date,
+        default:new Date().toString()
+    },
     completed: { type: Boolean, default: false },
     xpReward: { type: Number, default: 10,select:false },
     status: { type: String, enum: ['pending', 'completed'], default: 'pending' },
