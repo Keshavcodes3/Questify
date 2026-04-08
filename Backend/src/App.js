@@ -10,10 +10,11 @@ app.use(cookie())
 import userRouter from './Routes/user.routes'
 import habitRouter from './Routes/habit.routes'
 import taskRoutes from './Routes/task.routes'
-
+import challengeRoutes from './Routes/challenge.routes'
 
 
 app.use('/api/v1/user',userRouter)
 app.use('/api/v1/habit',habitRouter)
 app.use('/api/v1/task',taskRoutes)
+app.use('/api/v1/challenge',challengeRoutes)
 export default app

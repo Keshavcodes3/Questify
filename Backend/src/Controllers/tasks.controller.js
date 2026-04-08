@@ -1,5 +1,10 @@
+
 import taskModel from "../Models/task.model";
 import userModel from "../Models/user.model";
+import mongoose from "mongoose";
+
+
+
 export const createTask = async (req, res) => {
     try {
         const { title, description, priority, dueDate } = req.body;
@@ -156,6 +161,7 @@ export const updateTask = async (req, res) => {
 }
 
 
+
 export const deleteTask = async (req, res) => {
     try {
         const userId = req.user.id
@@ -217,16 +223,42 @@ export const getAllTaskOfToday = async (req, res) => {
                 message: "User not found"
             });
         }
-        const pendingTasks = await taskModel.find({ user: userId, status: "pending" })
-        const completedTasks = await taskModel.find({ user: userId, status: "completed" })
-        return res.status(200).json({
-            message: "All tasks of today",
-            error: null,
-            pendingTasks: pendingTasks,
-            completedTasks:completedTasks,
-            success: true
-        })
+        const startOfTheDay = new Date();
+        startOfTheDay.setHours(0, 0, 0, 0);
+        const endOfTheDay = new Date()
+        endOfTheDay.setHours(23, 59, 59, 999);
 
+        const result = await taskModel.aggregate([{
+            $match: {
+                user: new mongoose.Types.ObjectId(userId),
+                dueDate: { $gte: startOfTheDay, $lte: endOfTheDay }
+            },
+            $group: {
+                _id: "$status",
+                tasks: {
+                    $push: {
+                        title: "$title",
+                        description: "$description",
+                        priority: "$priority",
+                        dueDate: "$dueDate"
+                    }
+                },
+                count:{$sum:1}
+            }
+        }])
+        const formatted = {
+            pending: [],
+            completed: [],
+            pendingCount: 0,
+            completedCount: 0
+        };
+        
+        return res.status(200).json({
+            message:"All Tasks Fetched successfully",
+            error:null,
+            success:true,
+            result
+        })
     } catch (err) {
         return res.status(500).json({
             message: "Internal server error",
@@ -390,6 +422,7 @@ export const getWeeklyStats = async (req, res) => {
         })
     }
 }
+
 
 
 

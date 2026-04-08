@@ -34,10 +34,10 @@ const userSchema = new mongoose.Schema({
     select: false
 
   },
-  streak:{
-    type:String,
-    default:"0",
-    select:false
+  streak: {
+    type: String,
+    default: "0",
+    select: false
   },
   xp: {
     type: Number,
@@ -45,9 +45,9 @@ const userSchema = new mongoose.Schema({
     select: false
 
   },
-  lastActiveDay:{
-    type:Date,
-    default:Date.now().toString()
+  lastActiveDay: {
+    type: Date,
+    default: Date.now().toString()
   },
   coins: {
     type: Number,
@@ -55,6 +55,10 @@ const userSchema = new mongoose.Schema({
     select: false
 
   },
+  activeChallenges: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Challenge"
+  }]
 }, { timestamps: true });
 
 export default mongoose.model("User", userSchema);
