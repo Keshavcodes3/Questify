@@ -348,14 +348,22 @@ export const deleteChallenge = async (req, res) => {
                 error: "Try to delete challenge instead"
             })
         }
-        if(challenge.creator!==userId){
+        if (challenge.creator !== userId) {
             return res.status(400).json({
-                message:"You can't delete a challenge , you havenot created",
-                error:"Ownership mismatched",
-                success:false
+                message: "You can't delete a challenge , you havenot created",
+                error: "Ownership mismatched",
+                success: false
             })
         }
         await challengeModel.findByIdAndDelete(challengeId)
+
+        challenge.forEach(async (participant) => {
+            challengeModel.findByIdAndUpdate(participant._id, {
+                $pull: {
+                    participants: { user: user._id }
+                }
+            })
+        })
         return res.status(200).json({
             message: "Challenge Deleted Successfully",
             error: null,
