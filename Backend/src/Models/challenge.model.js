@@ -25,7 +25,8 @@ const challengeSchema = new mongoose.Schema({
             default: 0,
         }
     }],
-    completed: { type: Map, of: Boolean, default: {} },
+    completedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+
     reward: {
         xp: Number,
         coins: Number,
